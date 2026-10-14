@@ -904,7 +904,7 @@ fn tenxer_mode_rows(
 }
 
 const DEFAULT_TOOLS: &[Shortcut] = &[
-    row(One(FILTER), "Filter the current pane"),
+    row(Any(&[FILTER, FILTER_SLASH]), "Filter the current pane"),
     row(One(SEARCH), "Open global search"),
     row(One(JUMP_TO_FOLDER), "Jump to a recent folder"),
     row(

@@ -2453,8 +2453,13 @@ fn build_icons_pane(
     let source_index_for_filter_activate = context.source_index.clone();
     let depth_for_filter_activate = context.depth;
     let filter_query_for_activate = filter_query.clone();
+    let results_for_activate = pane_section.view.clone();
     controls.filter_entry.connect_activate(move |_| {
         if filter_query_for_activate.borrow().trim().is_empty() {
+            return;
+        }
+        if !super::preferences::PreferenceManager::shared().type_to_search_active() {
+            focus_filtered_item(&results_for_activate, &selection_for_filter_activate);
             return;
         }
         activate_filtered_item(
@@ -3497,8 +3502,13 @@ fn build_list_pane(
     let view_for_filter_activate = section.view_model.clone();
     let source_index_for_filter_activate = source_index.clone();
     let filter_query_for_activate = filter_query.clone();
+    let results_for_activate = section.view.clone();
     filter_entry.connect_activate(move |_| {
         if filter_query_for_activate.borrow().trim().is_empty() {
+            return;
+        }
+        if !super::preferences::PreferenceManager::shared().type_to_search_active() {
+            focus_filtered_item(&results_for_activate, &selection_for_filter_activate);
             return;
         }
         activate_filtered_item(
@@ -4457,6 +4467,22 @@ fn view_position_for_source(
     }
     (0..filtered.n_items())
         .find(|candidate| filtered.item(*candidate).is_some_and(|value| value == item))
+}
+
+/// Home-row navigation leaves the filter on the selected match, or the first.
+fn focus_filtered_item(view: &gtk::Widget, selection: &gtk::MultiSelection) {
+    let count = selection.n_items();
+    let Some(position) = (0..count)
+        .find(|position| selection.is_selected(*position))
+        .or((count > 0).then_some(0))
+    else {
+        return;
+    };
+    selection.select_item(position, true);
+    if let Some(window) = view.root().and_downcast::<gtk::Window>() {
+        window.set_focus_visible(true);
+    }
+    focus_collection_item(view, position);
 }
 
 fn activate_filtered_item(

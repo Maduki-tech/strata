@@ -7,9 +7,9 @@ use crate::ui::browser::clipboard::install_directory_drop_target;
 use crate::ui::browser::collection::{
     ActivePaneFilter, ViewMap, activate_recursive_search_result, apply_filter_query,
     apply_selection_plan, bind_filter_query, bitset_positions, cancel_source,
-    deactivate_recursive_search, detach_collection_view, filter_placeholder,
-    recursive_search_activation_key, restore_filter_controls, scroll_collection_when_allocated,
-    search_result_navigation_position,
+    deactivate_recursive_search, detach_collection_view, filter_enter_leaves_field,
+    filter_placeholder, recursive_search_activation_key, restore_filter_controls,
+    scroll_collection_when_allocated, search_result_navigation_position,
 };
 use crate::ui::browser::context_menu::{install_folder_context_menu, install_item_context_menu};
 use crate::ui::browser::entry::{entry_filter, entry_model_value};
@@ -1684,8 +1684,9 @@ impl ViewState {
             if press.is(UP) {
                 return glib::Propagation::Stop;
             }
-            let activate = recursive_search_activation_key(press);
-            if !activate && !press.is(DOWN) {
+            let leave = filter_enter_leaves_field(press);
+            let activate = !leave && recursive_search_activation_key(press);
+            if !activate && !leave && !press.is(DOWN) {
                 return glib::Propagation::Proceed;
             }
             let current = bitset_positions(&selection_for_navigation.selection())

@@ -543,3 +543,24 @@ def test_keyboard_only_copy_and_paste_round_trip(strata):
         "the keyboard-only paste to land",
     )
     assert fixture.path("todo.txt").exists(), "a copy must leave the source alone"
+
+
+@pytest.mark.preferences(type_to_search=False)
+@pytest.mark.parametrize("mode", ALL_MODES)
+@pytest.mark.parametrize("recursive", [
+    pytest.param(False, marks=pytest.mark.preferences(filter_include_subfolders=False)),
+    pytest.param(True, marks=pytest.mark.preferences(filter_include_subfolders=True)),
+])
+def test_home_row_filter_opens_on_slash_and_enter_lands_on_the_match(strata, mode, recursive):
+    strata.select_entry("readme.md")
+    strata.wait_for_focused_entry("readme.md")
+
+    strata.keyboard.press("/")
+    field = strata.editable_field()
+    strata.keyboard.type_text("todo")
+    strata.wait(lambda: strata.matches() == ["todo.txt"], "the filter to narrow to todo.txt")
+
+    strata.keyboard.press("Return")
+    strata.wait(lambda: not field.has_state("focused"), "Return to leave the filter field")
+    strata.wait_for_focused_entry("todo.txt")
+    assert field.text == "todo"

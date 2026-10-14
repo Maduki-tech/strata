@@ -100,7 +100,11 @@ impl Dispatcher {
         if event.press.is(ESCAPE_ANY) && self.view.dismiss_focused_filter() {
             return Some(Propagation::Stop);
         }
-        if event.press.is(FILTER) && self.view.show_filter() {
+        let slash = !self.type_to_search.preferences.type_to_search_active()
+            && event.press.is(FILTER_SLASH)
+            && !event.press.used_fallback()
+            && self.view.item_view_has_focus();
+        if (event.press.is(FILTER) || slash) && self.view.show_filter() {
             return Some(Propagation::Stop);
         }
         if event.press.is(LOCATION) {

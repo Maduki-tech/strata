@@ -739,6 +739,12 @@ pub(crate) fn recursive_search_activation_key(press: &KeyPress) -> bool {
     press.is_any(&[ENTER, RIGHT])
 }
 
+/// With home-row navigation, Enter leaves the filter field for its matches
+/// instead of opening one.
+pub(crate) fn filter_enter_leaves_field(press: &KeyPress) -> bool {
+    press.is(ENTER) && !PreferenceManager::shared().type_to_search_active()
+}
+
 pub(crate) fn activate_recursive_search_result(
     browser: &Weak<Browser>,
     results: &RefCell<Vec<crate::services::SearchItem>>,

@@ -80,10 +80,11 @@ pub(crate) use crate::ui::browser::clipboard::{
     prepare_file_drop_target,
 };
 pub(crate) use crate::ui::browser::collection::{
-    ActivePaneFilter, bind_listing_filter, detach_collection_view, filter_placeholder,
-    focus_collection_item_when_allocated, focus_filter_entry, notify_filter_query,
-    prepare_collection_inline_edit, refocus_filter_entry, restore_filter_controls,
-    reveal_collection_after_layout, scroll_collection_when_allocated, search_result_entry,
+    ActivePaneFilter, bind_listing_filter, detach_collection_view, filter_enter_leaves_field,
+    filter_placeholder, focus_collection_item_when_allocated, focus_filter_entry,
+    notify_filter_query, prepare_collection_inline_edit, refocus_filter_entry,
+    restore_filter_controls, reveal_collection_after_layout, scroll_collection_when_allocated,
+    search_result_entry,
 };
 pub(in crate::ui) use crate::ui::browser::collection::{FilterQueryBinding, bind_filter_query};
 pub(super) use crate::ui::browser::context_menu::{

@@ -1281,6 +1281,10 @@ fn tenxer_file_list_skips_conflicting_defaults_and_keeps_bound_shortcuts() {
             focus_files(&fixture);
             assert!(fixture.press(Key::j, ModifierType::empty()));
             assert_ne!(fixture.selected(), [0], "home row moves again");
+            assert!(fixture.press(Key::slash, ModifierType::empty()));
+            assert!(fixture.view.filter_has_focus(), "slash opens the filter");
+            assert!(fixture.press(Key::Escape, ModifierType::empty()));
+            focus_files(&fixture);
             assert!(!fixture.press(Key::backslash, control));
             assert!(preferences.arrow_navigation_scoped());
             preferences.set_tenxer_mode(true);

@@ -673,7 +673,7 @@ pub(super) fn wrap(
         if press.is(UP) {
             return glib::Propagation::Stop;
         }
-        if press.is(DOWN) {
+        if press.is(DOWN) || super::browser::filter_enter_leaves_field(press) {
             let current = state.collection.current_position();
             if let Some(window) = state.stack.root().and_downcast::<gtk::Window>() {
                 window.set_focus_visible(true);
